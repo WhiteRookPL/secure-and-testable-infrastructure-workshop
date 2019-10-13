@@ -3,3 +3,6 @@
 
 # Kitchen dependencies:
 .kitchen/
+
+# Python cache:
+__pycache__/

@@ -15,27 +15,49 @@ provisioner:
   ansible_diff: true
   roles_path: provisioning/roles
   playbook: provisioning/playbook.yml
+  require_chef_for_busser: false
+
+# This is used for InSpec
+# verifier:
+#   name: inspec
 
 verifier:
-  name: inspec
+  name: shell
+  command: >
+    py.test --verbose --color=yes --hosts="ssh://${KITCHEN_USERNAME}@${KITCHEN_HOSTNAME}:${KITCHEN_PORT}" --ssh-identity-file="${KITCHEN_SSH_KEY}" "test/integration/${KITCHEN_SUITE}"
 
 platforms:
   - name: ubuntu-18.04
+    lifecycle:
+      pre_verify:
+        - remote: sudo apt-get -y install python-pip
     driver_config:
       network:
         - ["forwarded_port", {guest: 80, host: 8080}]
   - name: ubuntu-16.04
+    lifecycle:
+      pre_verify:
+        - remote: sudo apt-get -y install python-pip
     driver_config:
       network:
         - ["forwarded_port", {guest: 80, host: 8081}]
   - name: centos-7
+    lifecycle:
+      pre_verify:
+        - remote: sudo yum -y install python-pip
+        - remote: sudo pip install six==1.11.0
     driver_config:
       network:
         - ["forwarded_port", {guest: 80, host: 8082}]
 
 suites:
+
+  # This is used for InSpec:
+  # - name: default
+  #   verifier:
+  #     inspec_tests:
+  #       - test/smoke/default
+  #       - test/security/default
+
+  # This is used for TestInfra:
   - name: default
-    verifier:
-      inspec_tests:
-        - test/smoke/default
-        - test/security/default

@@ -3,3 +3,4 @@ boto3==1.9.8
 awscli==1.16.18
 aws-mfa==0.0.12
 ansible==2.7.8
+testinfra
