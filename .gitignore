@@ -1,0 +1,5 @@
+# Virtual Environment:
+.env/
+
+# Kitchen dependencies:
+.kitchen/
