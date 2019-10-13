@@ -1,9 +1,17 @@
 # encoding: utf-8
 
-describe package('htop') do
-  it { should be_installed }
-end
+packages = [
+  "htop",
+  "curl",
+  "mc",
+  "net-tools",
+  "lsof",
+  "nmap",
+  "iotop"
+]
 
-describe package('not-existing-package') do
-  it { should_not be_installed }
+packages.each do |package_name|
+  describe package(package_name) do
+    it { should be_installed }
+  end
 end
