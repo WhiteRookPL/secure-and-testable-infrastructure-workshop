@@ -1,25 +1,72 @@
-describe service('apache2') do
-  it { should be_enabled }
+control 'apache2-service-at-ubuntu' do
+  only_if { os[:name] == 'ubuntu' }
+
+  describe service('apache2') do
+    it { should be_enabled }
+  end
+
+  describe service('apache2') do
+    it { should be_running }
+  end
 end
 
-describe service('apache2') do
-  it { should be_running }
+control 'httpd-service-at-centos' do
+  only_if { os[:name] == 'centos' }
+
+  describe service('httpd') do
+    it { should be_enabled }
+  end
+
+  describe service('httpd') do
+    it { should be_running }
+  end
 end
 
-describe port(80) do
-  it { should be_listening }
+control 'port-80-apache2-service-at-ubuntu' do
+  only_if { os[:name] == 'ubuntu' }
 
-  its('processes') { should include 'apache2' }
+  describe port(80) do
+    it { should be_listening }
+
+    its('processes') { should include 'apache2' }
+  end
 end
 
-describe file('/var/www/html/index.html') do
+control 'port-80-apache2-service-at-centos' do
+  only_if { os[:name] == 'centos' }
+
+  describe port(80) do
+    it { should be_listening }
+
+    its('processes') { should include 'httpd' }
+  end
+end
+
+index_file = '/var/www/html/index.html'
+
+describe file(index_file) do
   it { should be_file }
-
-  it { should be_owned_by "www-data" }
-  it { should be_grouped_into "www-data" }
 
   its('mode') { should cmp '0644' }
 
   its('content') { should match /Secure and Testable Infrastructure/ }
   its('content') { should match /A&A Days 2019/ }
+end
+
+control 'ownership-of-var-www-html-index-at-ubuntu' do
+  only_if { os[:name] == 'ubuntu' }
+
+  describe file(index_file) do
+    it { should be_owned_by "www-data" }
+    it { should be_grouped_into "www-data" }
+  end
+end
+
+control 'ownership-of-var-www-html-index-at-centos' do
+  only_if { os[:name] == 'centos' }
+
+  describe file(index_file) do
+    it { should be_owned_by "apache" }
+    it { should be_grouped_into "apache" }
+  end
 end

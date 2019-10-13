@@ -24,6 +24,14 @@ platforms:
     driver_config:
       network:
         - ["forwarded_port", {guest: 80, host: 8080}]
+  - name: ubuntu-16.04
+    driver_config:
+      network:
+        - ["forwarded_port", {guest: 80, host: 8081}]
+  - name: centos-7
+    driver_config:
+      network:
+        - ["forwarded_port", {guest: 80, host: 8082}]
 
 suites:
   - name: default
