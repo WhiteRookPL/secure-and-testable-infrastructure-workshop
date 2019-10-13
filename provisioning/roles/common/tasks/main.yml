@@ -28,7 +28,16 @@
   package:
     name:
       - yum-utils
+      - firewalld
+      - python-firewall
     state: present
+  when: ansible_facts['distribution'] == "CentOS"
+
+- name: Ensure firewalld is running and enabled as configured.
+  service:
+    name: firewalld
+    state: started
+    enabled: true
   when: ansible_facts['distribution'] == "CentOS"
 
 - name: Open port 22 for OpenSSH (specific for CentOS).
