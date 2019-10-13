@@ -15,9 +15,13 @@ provisioner:
   ansible_diff: true
   roles_path: provisioning/roles
   playbook: provisioning/playbook.yml
+  require_chef_for_busser: true
 
-verifier:
-  name: inspec
+# This is used for InSpec
+# verifier:
+#   name: inspec
+
+# And provide no verifier, in order to use Busser with autodetection for Serverspec.
 
 platforms:
   - name: ubuntu-18.04
@@ -34,8 +38,13 @@ platforms:
         - ["forwarded_port", {guest: 80, host: 8082}]
 
 suites:
+
+  # This is used for InSpec:
+  # - name: default
+  #   verifier:
+  #     inspec_tests:
+  #       - test/smoke/default
+  #       - test/security/default
+
+  # This is used for Serverspec:
   - name: default
-    verifier:
-      inspec_tests:
-        - test/smoke/default
-        - test/security/default
